@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps with Flask</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU&libraries=places,geometry" defer></script>
+</head>
+<body>
+
+    <div id="map" style="height: 400px;"></div>
+
+    <script>
+        function initMap() {
+            const location1 = { lat: {{ my_lat }}, lng: {{ my_lng }} }; // Example coordinates for San Francisco
+            const location2 = { lat: {{ pt_lat }}, lng: {{ pt_lng }} }; // Example coordinates for Los Angeles
+
+            const map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: (location1.lat + location2.lat) / 2, lng: (location1.lng + location2.lng) / 2 },
+                zoom: 10,
+            });
+
+            const marker1 = new google.maps.Marker({
+                position: location1,
+                map: map,
+                title: 'Location 1',
+                icon: {
+                    url: '/static/home.png',
+                    scaledSize: new google.maps.Size(32, 32), // Adjust the size as needed
+    }
+            });
+
+            const marker2 = new google.maps.Marker({
+                position: location2,
+                map: map,
+                title: 'Location 2',
+                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+            });
+
+            const radiusCenter = new google.maps.LatLng((location1.lat + location2.lat) / 2, (location1.lng + location2.lng) / 2);
+            const radius = new google.maps.Circle({
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 0,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35,
+                map: map,
+                center: radiusCenter,
+                radius: google.maps.geometry.spherical.computeDistanceBetween(location1, location2) / 2
+            });
+
+
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU&callback=initMap"></script>
+</body>
+</html>

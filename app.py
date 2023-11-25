@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 import googlemaps
 
-gmaps = googlemaps.Client(key='AIzaSyAkkUCXPqslmWCAMVhnAmHyk_IfkYl5EN8')
+gmaps = googlemaps.Client(key='AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU')
 
 # # Geocoding an address
 # geocode_result = gmaps.geocode('1600 Amphitheatre Parkway, Mountain View, CA')
@@ -21,6 +21,10 @@ def home():
 
 global userLocationInputCoord
 global partnerLocationInputCoord
+global my_lat_global
+global my_lng_global
+global pt_lat_global
+global pt_lng_global
 @app.route('/', methods=['POST'])
 def testing():
     userLocationInput = request.form['userLocationInput']
@@ -33,11 +37,19 @@ def testing():
     userLocationInputCoord = [userLocationInput_result[0]["geometry"]["location"]["lat"],
                               userLocationInput_result[0]["geometry"]["location"]["lng"]]
 
-    partnerLocationInputCoord = (partnerLocationInput_result[0]["geometry"]["location"]["lat"],
-                              partnerLocationInput_result[0]["geometry"]["location"]["lng"])
+    partnerLocationInputCoord = [partnerLocationInput_result[0]["geometry"]["location"]["lat"],
+                              partnerLocationInput_result[0]["geometry"]["location"]["lng"]]
 
     #midpoint = (int(userLocationInput) + int(partnerLocationInput)) / 2
-    return render_template("index.html")
+
+    my_lat_global = userLocationInputCoord[0]
+    my_lng_global = userLocationInputCoord[1]
+    pt_lat_global = partnerLocationInputCoord[0]
+    pt_lng_global = partnerLocationInputCoord[1]
+
+    # print(userLocationInputCoord)
+    # print(partnerLocationInputCoord)
+    return render_template("result.html", my_lat=my_lat_global, my_lng=my_lng_global, pt_lat=pt_lat_global, pt_lng=pt_lng_global)
 
 
 
