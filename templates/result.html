@@ -27,14 +27,17 @@
                 icon: {
                     url: '/static/home.png',
                     scaledSize: new google.maps.Size(32, 32), // Adjust the size as needed
-    }
+                }
             });
 
             const marker2 = new google.maps.Marker({
                 position: location2,
                 map: map,
                 title: 'Location 2',
-                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+                icon: {
+                    url: '/static/partner.png',
+                    scaledSize: new google.maps.Size(32, 32), // Adjust the size as needed
+                }
             });
 
             const radiusCenter = new google.maps.LatLng((location1.lat + location2.lat) / 2, (location1.lng + location2.lng) / 2);
@@ -49,8 +52,47 @@
                 radius: google.maps.geometry.spherical.computeDistanceBetween(location1, location2) / 2
             });
 
+            const addresses = [
+                '1600 Amphitheatre Parkway, Mountain View, CA',
+                'Statue of Liberty, New York, NY',
+                'Big Ben, London, UK',
+                // Add more addresses as needed
+            ];
+
+            // Geocode addresses and add markers
+            addresses.forEach(address => {
+                geocodeAddress(address, map);
+            });
+        }
+
+        function geocodeAddress(address, map) {
+            const geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({ address: address }, (results, status) => {
+                if (status === 'OK' && results[0].geometry) {
+                    const location = results[0].geometry.location;
+
+                    // Create a marker for each location
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: location,
+                        title: address,
+                    });
+
+
+                    // Extend the map bounds to include the marker
+                    mapBounds.extend(location);
+                    map.fitBounds(mapBounds);
+                } else {
+                    console.error('Geocode was not successful for the following reason:', status);
+                }
+            });
 
         }
+
+        // Variable to store the map bounds
+        const mapBounds = new google.maps.LatLngBounds();
+
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU&callback=initMap"></script>
 </body>
