@@ -149,7 +149,7 @@
   width: 100%;
   display: flex;
   position: relative;
-  min-height: 100vh;
+  min-height: 10vh;
   overflow-x: hidden;
   align-items: center;
   flex-direction: column;

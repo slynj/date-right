@@ -20,6 +20,10 @@ def home():
     return render_template('index.html')
 
 
+@app.route('/home')
+def backhome():
+    return render_template('index.html')
+
 
 global userLocationInputCoord
 global partnerLocationInputCoord
