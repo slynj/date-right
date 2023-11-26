@@ -49,7 +49,7 @@ def testing():
 
     # print(userLocationInputCoord)
     # print(partnerLocationInputCoord)
-    return render_template("result.html", my_lat=my_lat_global, my_lng=my_lng_global, pt_lat=pt_lat_global, pt_lng=pt_lng_global)
+    return render_template("testing.html", my_lat=my_lat_global, my_lng=my_lng_global, pt_lat=pt_lat_global, pt_lng=pt_lng_global)
 
 
 
