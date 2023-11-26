@@ -195,6 +195,10 @@
                                 map: map,
                                 position: location,
                                 title: address,
+                                icon: {
+                                    url: '/static/location.png',
+                                    scaledSize: new google.maps.Size(32, 40), // Adjust the size as needed
+                                }
                             });
 
                             // Add click event to show styled info window
