@@ -16,6 +16,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
+    # index.html
     return render_template('index.html')
 
 
@@ -56,7 +57,7 @@ def testing():
     print(places_lst)
     # print(userLocationInputCoord)
     # print(partnerLocationInputCoord)
-    return render_template("testing.html",
+    return render_template("second.html",
                            my_lat=my_lat_global,
                            my_lng=my_lng_global,
                            pt_lat=pt_lat_global,
