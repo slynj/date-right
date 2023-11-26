@@ -1,0 +1,6 @@
+# Project dependencies
+googlemaps
+flask
+pandas
+geopy
+great_circle_calculator

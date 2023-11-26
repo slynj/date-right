@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Feedbox Mobile App</title>
+    <meta property="og:title" content="Feedbox Mobile App" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta property="twitter:card" content="summary_large_image" />
+
+    <style data-tag="reset-style-sheet">
+      html {  line-height: 1.15;}body {  margin: 0;}* {  box-sizing: border-box;  border-width: 0;  border-style: solid;}p,li,ul,pre,div,h1,h2,h3,h4,h5,h6,figure,blockquote,figcaption {  margin: 0;  padding: 0;}button {  background-color: transparent;}button,input,optgroup,select,textarea {  font-family: inherit;  font-size: 100%;  line-height: 1.15;  margin: 0;}button,select {  text-transform: none;}button,[type="button"],[type="reset"],[type="submit"] {  -webkit-appearance: button;}button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner {  border-style: none;  padding: 0;}button:-moz-focus,[type="button"]:-moz-focus,[type="reset"]:-moz-focus,[type="submit"]:-moz-focus {  outline: 1px dotted ButtonText;}a {  color: inherit;  text-decoration: inherit;}input {  padding: 2px 4px;}img {  display: block;}html { scroll-behavior: smooth  }
+    </style>
+    <style data-tag="default-style-sheet">
+      html {
+        font-family: Lexend;
+        font-size: 16px;
+      }
+
+      body {
+        font-weight: 400;
+        font-style:normal;
+        text-decoration: none;
+        text-transform: none;
+        letter-spacing: normal;
+        line-height: 1.1;
+        color: var(--dl-color-grays-dark100);
+        background-color: var(--dl-color-grays-white100);
+
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
+      data-tag="font"
+    />
+    <style>
+      ::placeholder{
+      color: #63667066;
+      }
+    </style>
+
+    <title>Date Right</title>
+    <style>
+        .info-window {
+            max-width: 300px;
+        }
+
+        .info-window-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .info-window-address {
+            margin-bottom: 5px;
+        }
+
+        .info-window-rating {
+            margin-bottom: 10px;
+        }
+
+        .top-review-title {
+            font-weight: bold;
+            color: #4285f4; /* Google Blue */
+            margin-bottom: 5px;
+        }
+
+        .review-stars {
+            font-size: 18px;
+            color: #f8d32e; /* Google Yellow */
+        }
+
+        .review-item {
+            margin-bottom: 10px;
+        }
+
+        .no-reviews {
+            font-style: italic;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU&libraries=places,geometry&callback=initMap" defer></script>
+  </head>
+  <body>
+{#    <link rel="stylesheet" href="./style.css" />#}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+
+    <div>
+{#      <link href="./index.css" rel="stylesheet" />#}
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/second.css') }}">
+
+      <div class="home-container">
+        <div class="navbar-navbar-container">
+          <header
+            data-role="Header"
+            class="navbar-max-width navigation-container"
+          >
+            <div data-role="BurgerMenu" class="navigation-burger-menu">
+
+            </div>
+              <a href="{{ url_for('home') }}">
+            <img
+              alt="logo"
+              src="static/public/untitled%20design-200h.png"
+              class="navbar-image"
+            />
+                  </a>
+            <img
+              alt="image"
+              src="static/public/girl-cat-200h.png"
+              class="navbar-image1"
+            />
+            <img
+              alt="image"
+              src="static/public/copy%20of%20untitled-200h.png"
+              class="navbar-image2"
+            />
+
+          </header>
+        </div>
+        <main class="home-main">
+          <div class="home-container1">
+            <h1 class="home-text">Spot your dates!</h1>
+          </div>
+        </main>
+      </div>
+
+        <div id="map" style="height: 600px;"></div>
+        <div id="locations">
+
+        </div>
+
+
+    <script>
+        function initMap() {
+            const location1 = { lat: {{ my_lat }}, lng: {{ my_lng }} }; // Example coordinates for San Francisco
+            const location2 = { lat: {{ pt_lat }}, lng: {{ pt_lng }} }; // Example coordinates for Los Angeles
+            
+
+
+            const map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: (location1.lat + location2.lat) / 2, lng: (location1.lng + location2.lng) / 2 },
+                zoom: 10,
+            });
+
+            const marker1 = new google.maps.Marker({
+                position: location1,
+                map: map,
+                title: 'Location 1',
+                icon: {
+                    url: '/static/home.png',
+                    scaledSize: new google.maps.Size(32, 32), // Adjust the size as needed
+                }
+            });
+
+            const marker2 = new google.maps.Marker({
+                position: location2,
+                map: map,
+                title: 'Location 2',
+                icon: {
+                    url: '/static/partner.png',
+                    scaledSize: new google.maps.Size(32, 32), // Adjust the size as needed
+                }
+            });
+
+            const radiusCenter = new google.maps.LatLng((location1.lat + location2.lat) / 2, (location1.lng + location2.lng) / 2);
+            const radius = new google.maps.Circle({
+                strokeColor: '#ff0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 0,
+                fillColor: '#ff0000',
+                fillOpacity: 0.35,
+                map: map,
+                center: radiusCenter,
+                radius: google.maps.geometry.spherical.computeDistanceBetween(location1, location2) / 2
+            });
+
+            const addresses = {{ my_places|tojson }};
+
+            const combined_data = {{ combined_data|tojson }}
+
+            const ELEM = document.getElementById('locations')
+            let newElement = ""
+            combined_data.forEach((item) => {
+              newElement += `
+              <div style="padding:25px; margin: 15px; margin-top: 30px; border: 1px solid #000; border-radius: 5px; box-shadow: 0 4px 8px 0 rgba(130, 130, 130, 0.2), 0 6px 20px 0 rgba(127, 127, 127, 0.19);">
+                <h1>${item[0]} (⭐ ${item[2]})</h1>
+                <p style="margin-top: 10px; font-size: 16px;vertical-align: middle"><span style="margin-right: 10px; font-size: 34px;vertical-align: middle">🏠</span> Address: ${item[1]}</p>
+                <div style="display: flex; margin-top: 15px">
+                    <div style="display: flex; align-items: center">
+                      <img src="static/home.png" style="vertical-align: middle; height: 37px; margin-right: 10px" />
+                      <p style="font-size: 16px; vertical-align: middle">Distance From User: ${item[3].toFixed(2)}km</p>
+                    </div>
+
+                    <div style="display: flex; align-items: center; margin-left: 30px">
+                      <img src="static/partner.png" style="vertical-align: middle; height: 37px; margin-right: 10px" />
+                      <p style="font-size: 16px; vertical-align: middle">Distance From User: ${item[4].toFixed(2)}km</p>  
+                    </div>
+                </div>
+              </div>
+              `
+            })
+            ELEM.innerHTML = newElement
+
+            // Add markers for each address
+            addresses.forEach(item => {
+                addMarkerWithDetails(map, item[0], item[1], item[2]);
+            });
+
+        }
+
+        function addMarkerWithDetails(map, address, lat, lng) {
+            const geocoder = new google.maps.Geocoder();
+            const placesService = new google.maps.places.PlacesService(map);
+
+            // Geocode the address to get the location
+            geocoder.geocode({ address: address }, (results, status) => {
+              if (status === 'OK' && results[0].geometry) {
+
+                    // Use Places API to get details for the location
+                    placesService.textSearch({ query: address }, (places, placesStatus) => {
+                            const place = places[0];
+                            const location = new google.maps.LatLng(lat, lng);
+                            // Create a marker for the location
+                            const marker = new google.maps.Marker({
+                                map: map,
+                                position: location,
+                                title: address,
+                            });
+
+                            // Add click event to show styled info window
+                            marker.addListener('click', function () {
+                                showStyledInfoWindow(map, marker, place);
+                            });
+
+                            // Extend the map bounds to include the marker
+                            mapBounds.extend(location);
+                            map.fitBounds(mapBounds);
+                    });
+                } else {
+                    console.error('Geocode was not successful for the following reason:', status);
+                }
+            });
+        }
+
+        function showStyledInfoWindow(map, marker, place) {
+    const infowindow = new google.maps.InfoWindow();
+    const placesService = new google.maps.places.PlacesService(map);
+    const autocompleteService = new google.maps.places.AutocompleteService();
+
+    // console.log('CHECKLING DON @ SHAH RUKH KHAn', place)
+
+    if (place === undefined) {
+      const content = `
+                <div class="info-window">
+                    <div class="info-window-title">No Information</div>
+                    <div class="info-window-address">Sorry!</div>
+                    <div class="no-reviews">No reviews available</div
+                </div>
+            `;
+
+            infowindow.setContent(content);
+
+            // Open the styled info window on the map
+            infowindow.open(map, marker);
+            return;
+          }
+        console.log(place.name)
+
+    // Use AutocompleteService to get place details directly
+autocompleteService.getPlacePredictions({ input: place.name, types: ['establishment'] }, (predictions, status) => {
+  console.log(predictions, status)
+        if (status === google.maps.places.PlacesServiceStatus.OK && predictions.length > 0) {
+            const placeId = predictions[0].place_id;
+
+            // Use Places API to get details for the location (including reviews)
+            placesService.getDetails({ placeId }, (placeDetails, detailsStatus) => {
+                if (detailsStatus === google.maps.places.PlacesServiceStatus.OK) {
+                    const content = `
+                        <div class="info-window">
+                            <div class="info-window-title">${placeDetails.name}</div>
+                            <div class="info-window-address">${placeDetails.formatted_address}</div>
+                            <div class="info-window-rating">
+                                <div class="review-stars">${getRatingStars(placeDetails.rating)}</div>
+                            </div>
+                            ${placeDetails.reviews && placeDetails.reviews.length > 0
+                                ? getTopReviewContent(placeDetails.reviews[0])
+                                : '<div class="no-reviews">No reviews available</div>'
+                            }
+                        </div>
+                    `;
+
+                    infowindow.setContent(content);
+
+                    // Open the styled info window on the map
+                    infowindow.open(map, marker);
+                } else {
+                    console.error('Places service request failed:', detailsStatus);
+                }
+            });
+        } else {
+          const content = `
+                <div class="info-window">
+                    <div class="info-window-title">No Information</div>
+                    <div class="info-window-address">Sorry!</div>
+                    <div class="no-reviews">No reviews available</div
+                </div>
+            `;
+
+            infowindow.setContent(content);
+
+            // Open the styled info window on the map
+            infowindow.open(map, marker);
+            return;
+            console.error('Autocomplete service request failed:', status);
+        }
+    });
+}
+
+
+        function getTopReviewContent(topReview) {
+            return `
+                <div class="top-review-title">Top Review</div>
+                <div class="review-item">
+                    <div class="review-stars">${getRatingStars(topReview.rating)}</div>
+                    <div class="review-author">${topReview.author_name}</div>
+                    <div>${topReview.text}</div>
+                </div>
+            `;
+        }
+
+
+        function getRatingStars(rating) {
+            const fullStars = '★'.repeat(Math.floor(rating));
+            const halfStar = (rating % 1 !== 0) ? '½' : '';
+            const emptyStars = '☆'.repeat(Math.floor(5 - rating));
+
+            return `${fullStars}${halfStar}${emptyStars}`;
+        }
+
+        // Variable to store the map bounds
+        const mapBounds = new google.maps.LatLngBounds();
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU&libraries=places,geometry&callback=initMap=initMap" async defer></script>
+    </div>
+    <script src="https://unpkg.com/@teleporthq/teleport-custom-scripts"></script>
+    <script>
+      window.onload = () => {
+        const runAllScripts = () => {
+          initializeAllSliders();
+        };
+
+        const listenForUrlChanges = () => {
+          let url = location.href;
+          document.body.addEventListener(
+            "click",
+            () => {
+              requestAnimationFrame(() => {
+                if (url !== location.href) {
+                  runAllScripts();
+                  url = location.href;
+                }
+              });
+            },
+            true
+          );
+        };
+
+        const initializeAllSliders = () => {
+          const allSliders = document.querySelectorAll('[data-type="slider"]');
+          allSliders.forEach((carrousel) => {
+            initializeSlider(carrousel);
+          });
+        };
+
+        const initializeSlider = (carrousel) => {
+          let currentSlide = 0;
+
+          const slides = carrousel.querySelectorAll('[data-type="slide"]');
+          const nextSlideBtns = carrousel.querySelectorAll(
+            '[data-action="nextSlide"]'
+          );
+          const previousSlideBtns = carrousel.querySelectorAll(
+            '[data-action="previousSlide"]'
+          );
+
+          const changeSlide = (slideIndex, action) => {
+            currentSlide = slideIndex;
+
+            switch (action) {
+              case "next":
+                slideIndex === slides.length - 1
+                  ? (currentSlide = 0)
+                  : currentSlide++;
+                break;
+              case "previous":
+                slideIndex === 0
+                  ? (currentSlide = slides.length - 1)
+                  : currentSlide--;
+            }
+
+            carrousel.style.transform = `translateX(${-100 * currentSlide}%)`;
+          };
+
+          previousSlideBtns.forEach((btn) => {
+            btn.addEventListener("click", () =>
+              changeSlide(currentSlide, "previous")
+            );
+          });
+
+          nextSlideBtns.forEach((btn) => {
+            btn.addEventListener("click", () =>
+              changeSlide(currentSlide, "next")
+            );
+          });
+        };
+
+        runAllScripts();
+      };
+    </script>
+
+
+
+
+  </body>
+</html>
