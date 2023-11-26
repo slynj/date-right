@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
+from filter import mains
 import googlemaps
 
 gmaps = googlemaps.Client(key='AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU')
@@ -25,6 +26,7 @@ global my_lat_global
 global my_lng_global
 global pt_lat_global
 global pt_lng_global
+global places_lst
 @app.route('/', methods=['POST'])
 def testing():
     userLocationInput = request.form['userLocationInput']
@@ -46,12 +48,28 @@ def testing():
     my_lng_global = userLocationInputCoord[1]
     pt_lat_global = partnerLocationInputCoord[0]
     pt_lng_global = partnerLocationInputCoord[1]
-
+    print(userLocationInputCoord)
+    print(partnerLocationInputCoord)
+    places_lst = mains((my_lat_global, my_lng_global), (pt_lat_global, pt_lng_global), 'jssjsjsj')
+    print(places_lst)
     # print(userLocationInputCoord)
     # print(partnerLocationInputCoord)
-    return render_template("testing.html", my_lat=my_lat_global, my_lng=my_lng_global, pt_lat=pt_lat_global, pt_lng=pt_lng_global)
+    return render_template("testing.html",
+                           my_lat=my_lat_global,
+                           my_lng=my_lng_global,
+                           pt_lat=pt_lat_global,
+                           pt_lng=pt_lng_global,
+                           my_places=places_lst)
 
 
+
+# @app.route('/get_list', methods=['GET'])
+# def get_list():
+#     # Call your Python function that returns a list
+#     result_list = filter.mains((my_lat_global, my_lng_global), (pt_lat_global, pt_lng_global), 'free')
+#     print(result_list)
+#     # Return the list as JSON
+#     return jsonify(result=result_list)
 
 
 

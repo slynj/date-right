@@ -42,7 +42,7 @@
             font-style: italic;
         }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU&libraries=places,geometry" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU&libraries=places,geometry&callback=initMap" defer></script>
 </head>
 <body>
 
@@ -90,11 +90,7 @@
                 radius: google.maps.geometry.spherical.computeDistanceBetween(location1, location2) / 2
             });
 
-            const addresses = [
-                '1600 Amphitheatre Parkway, Mountain View, CA',
-                'Statue of Liberty, New York, NY',
-                'Big Ben, London, UK',
-            ];
+            const addresses = {{ my_places|tojson }};
 
             // Add markers for each address
             addresses.forEach(address => {
@@ -142,12 +138,18 @@
         }
 
         function showStyledInfoWindow(map, marker, place) {
-            const infowindow = new google.maps.InfoWindow();
+    const infowindow = new google.maps.InfoWindow();
+    const placesService = new google.maps.places.PlacesService(map);
+    const autocompleteService = new google.maps.places.AutocompleteService();
+
+    // Use AutocompleteService to get predictions for the input place name
+    autocompleteService.getPlacePredictions({ input: place.name }, (predictions, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && predictions.length > 0) {
+            const placeId = predictions[0].place_id;
 
             // Use Places API to get details for the location (including reviews)
-            const placesService = new google.maps.places.PlacesService(map);
-            placesService.getDetails({ placeId: place.place_id }, (placeDetails, status) => {
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
+            placesService.getDetails({ placeId }, (placeDetails, detailsStatus) => {
+                if (detailsStatus === google.maps.places.PlacesServiceStatus.OK) {
                     const content = `
                         <div class="info-window">
                             <div class="info-window-title">${placeDetails.name}</div>
@@ -167,10 +169,17 @@
                     // Open the styled info window on the map
                     infowindow.open(map, marker);
                 } else {
-                    console.error('Places service request failed:', status);
+                    console.error('Places service request failed:', detailsStatus);
                 }
             });
+        } else {
+            console.error('Autocomplete service request failed:', status);
         }
+    });
+}
+
+
+
 
         function getTopReviewContent(topReview) {
             return `
@@ -182,6 +191,49 @@
                 </div>
             `;
         }
+
+        {#function showStyledInfoWindow(map, marker, place) {#}
+        {#    const infowindow = new google.maps.InfoWindow();#}
+        {##}
+        {#    // Use Places API to get details for the location (including reviews)#}
+        {#    const placesService = new google.maps.places.PlacesService(map);#}
+        {##}
+        {#    placesService.getDetails({ placeId: place.place_id }, (placeDetails, status) => {#}
+        {#        if (status === google.maps.places.PlacesServiceStatus.OK) {#}
+        {#            const content = `#}
+        {#                <div class="info-window">#}
+        {#                    <div class="info-window-title">${placeDetails.name}</div>#}
+        {#                    <div class="info-window-address">${placeDetails.formatted_address}</div>#}
+        {#                    <div class="info-window-rating">#}
+        {#                        <div class="review-stars">${getRatingStars(placeDetails.rating)}</div>#}
+        {#                    </div>#}
+        {#                    ${placeDetails.reviews && placeDetails.reviews.length > 0#}
+        {#                        ? getTopReviewContent(placeDetails.reviews[0])#}
+        {#                        : '<div class="no-reviews">No reviews available</div>'#}
+        {#                    }#}
+        {#                </div>#}
+        {#            `;#}
+        {##}
+        {#            infowindow.setContent(content);#}
+        {##}
+        {#            // Open the styled info window on the map#}
+        {#            infowindow.open(map, marker);#}
+        {#        } else {#}
+        {#            console.error('Places service request failed:', status);#}
+        {#        }#}
+        {#    });#}
+        {# }#}
+        {##}
+        {#function getTopReviewContent(topReview) {#}
+        {#    return `#}
+        {#        <div class="top-review-title">Top Review</div>#}
+        {#        <div class="review-item">#}
+        {#            <div class="review-stars">${getRatingStars(topReview.rating)}</div>#}
+        {#            <div class="review-author">${topReview.author_name}</div>#}
+        {#            <div>${topReview.text}</div>#}
+        {#        </div>#}
+        {#    `;#}
+        {# }#}
 
         function getRatingStars(rating) {
             const fullStars = '★'.repeat(Math.floor(rating));
