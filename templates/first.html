@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Right</title>
+
+    <script>
+        function initMap() {
+            // Set up the map
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 8
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <form method="POST">
+
+
+        <input type="text" id="userLocationInput" name="userLocationInput" placeholder="Enter your location" autocomplete="off">
+        <input type="text" id="partnerLocationInput" name="partnerLocationInput" placeholder="Enter partner's location" autocomplete="off">
+        <input type="submit">
+
+    </form>
+
+    <script>
+        // Initialize the Google Places Autocomplete
+        function initAutocomplete() {
+            const userLocationInput = document.getElementById('userLocationInput');
+            const userLocationInputAC = new google.maps.places.Autocomplete(userLocationInput);
+
+            const partnerLocationInput = document.getElementById('partnerLocationInput');
+            const partnerLocationInputAC = new google.maps.places.Autocomplete(partnerLocationInput);
+        }
+    </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU&callback=initMap"></script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgfO7mb91JqcGlSLJVjdf-EFWs6l_MSQU&libraries=places&callback=initAutocomplete"></script>
+
+    <div id="map" style="height: 400px;"></div>
+</body>
+</html>
