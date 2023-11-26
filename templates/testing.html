@@ -142,8 +142,8 @@
     const placesService = new google.maps.places.PlacesService(map);
     const autocompleteService = new google.maps.places.AutocompleteService();
 
-    // Use AutocompleteService to get predictions for the input place name
-    autocompleteService.getPlacePredictions({ input: place.name }, (predictions, status) => {
+    // Use AutocompleteService to get place details directly
+autocompleteService.getPlacePredictions({ input: place.name, types: ['establishment'] }, (predictions, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && predictions.length > 0) {
             const placeId = predictions[0].place_id;
 
@@ -177,6 +177,7 @@
         }
     });
 }
+
 
 
 

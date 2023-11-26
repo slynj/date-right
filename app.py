@@ -27,10 +27,12 @@ global my_lng_global
 global pt_lat_global
 global pt_lng_global
 global places_lst
+global priceSelectInput
 @app.route('/', methods=['POST'])
 def testing():
     userLocationInput = request.form['userLocationInput']
     partnerLocationInput = request.form['partnerLocationInput']
+    priceSelectInput = request.form['priceSelect']
 
     # Geocoding an address
     userLocationInput_result = gmaps.geocode(userLocationInput)
@@ -50,7 +52,7 @@ def testing():
     pt_lng_global = partnerLocationInputCoord[1]
     print(userLocationInputCoord)
     print(partnerLocationInputCoord)
-    places_lst = mains((my_lat_global, my_lng_global), (pt_lat_global, pt_lng_global), 'jssjsjsj')
+    places_lst = mains((my_lat_global, my_lng_global), (pt_lat_global, pt_lng_global), priceSelectInput)
     print(places_lst)
     # print(userLocationInputCoord)
     # print(partnerLocationInputCoord)
